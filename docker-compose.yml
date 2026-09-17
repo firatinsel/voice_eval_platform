@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: voice_eval_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: voice_eval_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d voice_eval_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: voice_eval_redis
+    ports:
+      - "6379:6379"
+
+  api:
+    build: .
+    container_name: voice_eval_fastapi
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgrespassword@postgres:5432/voice_eval_db
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - .:/app
+
+  celery_worker:
+    build: .
+    container_name: voice_eval_celery
+    command: celery -A app.celery_app.celery_app worker --loglevel=info -c 4
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgrespassword@postgres:5432/voice_eval_db
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - .:/app
+
+  dashboard:
+    build: .
+    container_name: voice_eval_django
+    command: >
+      sh -c "python dashboard_app/manage.py migrate &&
+             python dashboard_app/manage.py runserver 0.0.0.0:8001"
+    ports:
+      - "8001:8001"
+    environment:
+      - POSTGRES_DB=voice_eval_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgrespassword
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - .:/app
+
+volumes:
+  pgdata:
