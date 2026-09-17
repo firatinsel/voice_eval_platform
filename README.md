@@ -337,3 +337,4 @@ Verified Test Scenarios:
 * `test_stt_repetition_loop_detection`: Validates language-agnostic detection of repetitive ASR hallucination loops triggering `retry_stt`.
 * `test_adaptive_threshold_learning_and_anomaly`: Verifies Redis-backed sliding window baseline training and dynamic anomaly penalties.
 
+```
