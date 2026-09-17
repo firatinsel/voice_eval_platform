@@ -1,15 +1,14 @@
-```markdown
+
 # Voice AI Quality Evaluation & Intelligent Recovery Microservice
 
-A production-ready microservice designed to evaluate conversational Voice AI turns (Audio, STT, TTS) and trigger deterministic, explainable recovery actions (`accept`, `retry_stt`, `retry_tts`, `switch_provider`, `ask_repeat`, `safe_fallback`).
+A produc;l tion-ready microservice designed to evaluate conversational Voice AI turns (Audio, STT, TTS) and trigger deterministic, explainable recovery actions (`accept`, `retry_stt`, `retry_tts`, `switch_provider`, `ask_repeat`, `safe_fallback`).
 
 The platform implements a dual-path execution model: an ultra-low latency synchronous HTTP evaluation path alongside an asynchronous Celery and Redis worker for deep digital signal processing (DSP). It includes sliding-window adaptive baselines in Redis, Prometheus metrics, and a PostgreSQL database paired with a Django monitoring dashboard.
 
----
 
-## System Architecture
+System Architecture
 
-```text
+
                              [ Telephony Gateway / Voice Client ]
                                                │
              ┌─────────────────────────────────┴─────────────────────────────────┐
@@ -48,7 +47,7 @@ The platform implements a dual-path execution model: an ultra-low latency synchr
                                                                   │  - /admin/ Turn Auditor  │
                                                                   └──────────────────────────┘
 
-```
+
 
 ### Dual-Path Execution Pipeline
 
