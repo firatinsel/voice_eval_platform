@@ -10,7 +10,7 @@ The platform implements a dual-path execution model: an ultra-low latency synchr
 
 ## System Architecture
 
-```text
+
                              [ Telephony Gateway / Voice Client ]
                                                │
              ┌─────────────────────────────────┴─────────────────────────────────┐
@@ -49,7 +49,7 @@ The platform implements a dual-path execution model: an ultra-low latency synchr
                                                                   │  - /admin/ Turn Auditor  │
                                                                   └──────────────────────────┘
 
-```
+
 
 ### Dual-Path Execution Pipeline
 
