@@ -50,6 +50,7 @@ The platform implements a dual-path execution model: an ultra-low latency synchr
                                                                   └──────────────────────────┘
 
 ```
+```
 
 ### Dual-Path Execution Pipeline
 
